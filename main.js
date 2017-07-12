@@ -1,7 +1,12 @@
 import listenFeed from 'feedjs';
 import express from 'express';
 import path from 'path';
-import { getAtoms, createTablesIfNotExsits, insertToAtom } from './lib/db';
+import {
+  getAtoms,
+  createTablesIfNotExsits,
+  insertToAtom,
+  makeAtomRead
+} from './lib/db';
 import colors from 'colors';
 
 const startServer = async () => {
@@ -19,7 +24,12 @@ app.get('/alive', (req, res) => {
 
 app.get('/new-unread/:number', async (req, res) => {
   const atoms = await getAtoms(req.params.number);
-  res.json(atoms);
+  res.json(atoms.reverse());
+});
+
+app.post('/unread/:id', async (req, res) => {
+  await makeAtomRead(req.params.id);
+  res.send('ok'); // NOTE: 操他妈的，一定要返回点东西emacs那个狗逼web插件才能把进程关掉，调死爸爸了
 });
 
 app.listen(7788);
