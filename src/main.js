@@ -1,7 +1,7 @@
 import startFetchFeed from 'feedjs';
 import express from 'express';
 import path from 'path';
-import { getAtoms, createTablesIfNotExsits, insertToAtom, makeAtomRead } from './lib/db';
+import { getAtoms, createTablesIfNotExsits, insertToAtom, makeAtomRead } from './db';
 import colors from 'colors';
 import fs from 'fs';
 
@@ -22,9 +22,13 @@ async function main() {
   checkFeedFileExist();
   await createTablesIfNotExsits();
 
-  const feedSources = getFeeds;
-  startFetchFeed(feedSources, async feeds => {
-    await Promise.all(feeds.map(insertToAtom));
+  const feedSources = getFeeds();
+  startFetchFeed(feedSources, async (error, feeds) => {
+    if (error) {
+      console.error(error);
+    } else {
+      await Promise.all(feeds.map(insertToAtom));
+    }
   });
 
   const app = express();
