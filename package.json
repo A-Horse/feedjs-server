@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "node_modules/.bin/babel -d ./dist ./src",
-    "prepublish": "npm run compile"
+    "prepublish": "npm run compile",
+    "start": "babel-node src/main.js"
   },
   "bin": {
     "eel": "bin/eel"
